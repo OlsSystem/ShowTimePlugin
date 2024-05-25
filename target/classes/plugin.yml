@@ -1,0 +1,27 @@
+name: showtime
+version: '1.2'
+main: net.axolsystems.projectshowtime.ShowTime
+api-version: '1.20'
+depend: [PlaceholderAPI]
+commands:
+  addteam:
+    description: Adds a team to the database
+    usage: /addteam <teamname> <teamname> <color> <player1> <player2> <player3> <player4>
+  viewteams:
+    description: View all teams and their players
+    usage: /viewteams
+  addpoints:
+    description: Add points to a team
+    usage: /addpoints <teamname> <teamname> <points>
+  removepoints:
+    description: Remove points from a team
+    usage: /removepoints <teamname> <teamname> <points>
+  showteam:
+    description: Show team points in chat
+    usage: /showteam <teamname><teamname>
+  title:
+    description: Show team points as a title
+    usage: /title <player> <teamname> <teamname>
+  help:
+    description: Show available commands
+    usage: /help [command]
