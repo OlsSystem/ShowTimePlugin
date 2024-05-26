@@ -17,13 +17,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ShowTime extends JavaPlugin {
@@ -33,9 +31,11 @@ public class ShowTime extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        logger.info("showtimeplugin is being enabled...");
         initializeFirebase();
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new TeamPlaceholderExpansion(this).register();
+            logger.info("PlaceholderAPI found and registered.");
         }
     }
 
@@ -65,12 +65,13 @@ public class ShowTime extends JavaPlugin {
             firestore = FirestoreClient.getFirestore();
             logger.info("Firebase initialized successfully");
         } catch (IOException e) {
-            logger.severe("Failed to initialize Firebase: " + e.getMessage());
+            logger.log(Level.SEVERE, "Failed to initialize Firebase: " + e.getMessage(), e);
         }
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        logger.info("Command received: " + command.getName());
         if (command.getName().equalsIgnoreCase("addteam")) {
             if (args.length != 7) {
                 sender.sendMessage("Usage: /addteam <teamname> <teamname> <color> <player1> <player2> <player3> <player4>");
@@ -318,4 +319,18 @@ public class ShowTime extends JavaPlugin {
             return false;
         }
     }
+
+    @Override
+    public void onDisable() {
+        logger.info("showtimeplugin is being disabled...");
+        if (firestore != null) {
+            try {
+                firestore.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            logger.info("Firestore closed.");
+        }
+    }
+
 }
