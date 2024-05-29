@@ -1,24 +1,18 @@
-package net.axolsystems.projectshowtime;
+package net.axolsystems.showtime;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-
-
-import java.util.concurrent.ExecutionException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class TeamPlaceholderExpansion extends PlaceholderExpansion {
 
     private final ShowTime plugin;
-    private final Firestore firestore;
+    private final TeamsAPI teamsAPI;
 
     public TeamPlaceholderExpansion(ShowTime plugin) {
         this.plugin = plugin;
-        this.firestore = FirestoreClient.getFirestore();
+        this.teamsAPI = new TeamsAPI();
     }
 
     @Override
@@ -50,15 +44,16 @@ public class TeamPlaceholderExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier) {
         if (identifier.startsWith("points_")) {
             String teamName = identifier.split("_")[1];
-            DocumentReference teamRef = firestore.collection("teams").document(teamName);
             try {
-                ApiFuture<DocumentSnapshot> future = teamRef.get();
-                DocumentSnapshot document = future.get();
-                if (document.exists()) {
-                    Long points = document.getLong("points");
-                    return points != null ? String.valueOf(points) : "0";
+                String teamDataJson = String.valueOf(TeamsAPI.getAllTeamData());
+                JSONArray teamArray = new JSONArray(teamDataJson);
+                for (int i = 0; i < teamArray.length(); i++) {
+                    JSONObject team = teamArray.getJSONObject(i);
+                    if (team.getString("teamName").equalsIgnoreCase(teamName)) {
+                        return String.valueOf(team.getInt("points"));
+                    }
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return "0"; // Team not found or error occurred

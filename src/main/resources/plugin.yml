@@ -1,27 +1,35 @@
-name: showtimeplugin
-version: '${project.version}'
-main: net.axolsystems.projectshowtime.ShowTime
+name: ShowTime
+version: '1.5.6'
+main: net.axolsystems.showtime.ShowTime
 api-version: '1.20'
-depend: [PlaceholderAPI]
+depend: [PlaceholderAPI, ProtocolLib, LuckPerms]
 commands:
   addteam:
     description: Adds a team to the database
     usage: /addteam <teamname> <teamname> <color> <player1> <player2> <player3> <player4>
+    permission: showtime.addteam
   viewteams:
     description: View all teams and their players
     usage: /viewteams
   addpoints:
     description: Add points to a team
-    usage: /addpoints <teamname> <teamname> <points>
+    usage: /addpoints <playername> <points>
+    permission: showtime.points
   removepoints:
     description: Remove points from a team
-    usage: /removepoints <teamname> <teamname> <points>
+    usage: /removepoints <playername> <points>
+    permission: showtime.points
   showteam:
     description: Show team points in chat
-    usage: /showteam <teamname><teamname>
-  title:
-    description: Show team points as a title
-    usage: /title <player> <teamname> <teamname>
+    usage: /showteam <teamname> <teamname>
   help:
     description: Show available commands
     usage: /help [command]
+  checkforupdates:
+    description: Checks for updates to the ShowTime plugin
+    usage: /checkforupdates
+    permission: showtime.update
+  updatedata:
+    description: Checks for updates to moduels using data.
+    usage: /updatedata
+    permission: showtime.updatedata

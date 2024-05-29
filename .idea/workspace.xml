@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8b07013-9799-47a4-a155-167cafc6265e" name="Changes" comment="" />
+    <list default="true" id="2bc472e0-137b-4e30-9120-f42499985694" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,38 +17,27 @@
       </list>
     </option>
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
-  <component name="ProjectId" id="2h0jF98KJuxiqRgfaM04UCW4Vi0" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2h1OKUhhXPuMYoKVi8KJbG9eCAV" />
   <component name="ProjectViewState">
     <option name="flattenModules" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Maven.projectshowtime [clean].executor": "Run",
-    "Maven.projectshowtime [compile].executor": "Run",
-    "Maven.projectshowtime [deploy].executor": "Run",
-    "Maven.projectshowtime [install].executor": "Run",
-    "Maven.projectshowtime [package].executor": "Run",
-    "Maven.projectshowtime [site].executor": "Run",
-    "Maven.projectshowtime [test].executor": "Run",
-    "Maven.projectshowtime [validate].executor": "Run",
-    "Maven.projectshowtime [verify].executor": "Run",
+    "Maven.ShowTime [clean].executor": "Run",
+    "Maven.ShowTime [compile].executor": "Run",
+    "Maven.ShowTime [install].executor": "Run",
+    "Maven.ShowTime [validate].executor": "Run",
+    "Maven.ShowTime package.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "kotlin-language-version-configured": "true"
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="projectshowtime package" type="MavenRunConfiguration" factoryName="Maven">
+    <configuration name="ShowTime package" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
@@ -72,7 +61,7 @@
               <list />
             </option>
             <option name="resolveToWorkspace" value="false" />
-            <option name="workingDirPath" value="D:\Projects\Project ShowTime\1.20.1\projectshowtime" />
+            <option name="workingDirPath" value="D:\Projects\Project ShowTime\PluginV2\ShowTime" />
           </MavenRunnerParameters>
         </option>
       </MavenSettings>
@@ -82,11 +71,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c8b07013-9799-47a4-a155-167cafc6265e" name="Changes" comment="" />
-      <created>1716737786766</created>
+      <changelist id="2bc472e0-137b-4e30-9120-f42499985694" name="Changes" comment="" />
+      <created>1716758055551</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1716737786766</updated>
+      <updated>1716758055551</updated>
     </task>
     <servers />
   </component>
