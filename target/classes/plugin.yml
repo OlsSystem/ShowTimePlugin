@@ -1,5 +1,5 @@
 name: ShowTime
-version: '1.5.6'
+version: '1.5.8'
 main: net.axolsystems.showtime.ShowTime
 api-version: '1.20'
 depend: [PlaceholderAPI, ProtocolLib, LuckPerms]
@@ -33,3 +33,6 @@ commands:
     description: Checks for updates to moduels using data.
     usage: /updatedata
     permission: showtime.updatedata
+  markslimelauncher:
+    description: Marks a slime block as a launcher
+    usage: /markslimelauncher
