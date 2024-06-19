@@ -36,3 +36,6 @@ commands:
   markslimelauncher:
     description: Marks a slime block as a launcher
     usage: /markslimelauncher
+  togglegame:
+    description: Toggles games on or off
+    usage: /togglegame
