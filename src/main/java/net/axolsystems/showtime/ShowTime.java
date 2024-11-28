@@ -1,4 +1,4 @@
-package net.axolsystems;
+package net.axolsystems.showtime;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
