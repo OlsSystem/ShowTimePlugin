@@ -106,9 +106,11 @@ public class ShowTime extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         updateScoreboard(player.getName());
         updateTabList();
-        JSONObject settings = ShowTimeAPI.apiGetMethod("/api/getSettings");
+        JSONObject settingsData = ShowTimeAPI.apiGetMethod("/api/getSettings");
+        JSONObject settings = settingsData.getJSONObject("systemsData");
+        String gameName = settings.getString("gameName");
 
-        logger.log(Level.INFO, "Game Name: {0}", settings.getString("gameName"));
+        logger.log(Level.INFO, "Game Name: {0}", gameName);
         logger.log(Level.INFO, "[DEBUG] {0} Has Joined the server!", event.getPlayer().getDisplayName());
     }
     
@@ -232,7 +234,7 @@ public class ShowTime extends JavaPlugin implements Listener {
         
         JSONObject teamData = ShowTimeAPI.apiGetMethod("/api/teamdata");
         JSONObject settingsData = ShowTimeAPI.apiGetMethod("/api/getSettings");
-        JSONObject settings = settingsData.getJSONObject("system");
+        JSONObject settings = settingsData.getJSONObject("systemsData");
         JSONArray teams = teamData.getJSONArray("teams");
         JSONArray pointsArray = settingsData.getJSONArray("pointsArray");
         
