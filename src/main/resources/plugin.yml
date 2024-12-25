@@ -1,3 +1,13 @@
 main: net.axolsystems.showtime.ShowTime
 name: ProjectShowtime
 version: 2.0.1
+
+commands:
+  help:
+    description: Displays a list of all commands for Project Showtime
+    usage: /help
+    permission: showtime.contestant
+  addPoints:
+    description: Test command to see if help works as intended.
+    usage: /addPoints
+    permission: showtime.admin

@@ -2,6 +2,7 @@ package net.axolsystems.showtime;
 
 import java.io.File;
 
+import net.axolsystems.showtime.commands.HelpCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -83,6 +84,8 @@ public class ShowTime extends JavaPlugin implements Listener {
         launcherConfig = YamlConfiguration.loadConfiguration(launcherFile);
 
         ShowTimeUpdate.getInstance().autoUpdate();
+
+        this.getCommand("help").setExecutor(new HelpCommand(this));
 
         //loadLaunchers();
         initializeTeams();
