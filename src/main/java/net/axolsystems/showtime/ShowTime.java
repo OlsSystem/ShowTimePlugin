@@ -128,9 +128,10 @@ public class ShowTime extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         User user = luckPerms.getUserManager().getUser(player.getUniqueId());
         String prefix = user.getCachedData().getMetaData(QueryOptions.defaultContextualOptions()).getPrefix();
+        prefix = (prefix == null) ? "§7§lDefault " : prefix;
 
         String formattedPrefix = formattedPrefix(prefix);
-        String message = formattedPrefix + player.getDisplayName() + "&r: " + formattedPrefix(event.getMessage());
+        String message = formattedPrefix + player.getDisplayName() + "§r: " + formattedPrefix(event.getMessage());
         event.setFormat(message);
     }
 
@@ -365,7 +366,7 @@ public class ShowTime extends JavaPlugin implements Listener {
 
             if (!userFound) {
 
-                logger.log(Level.INFO, "User {0}is not appart of any team.", username);
+                logger.log(Level.INFO, "User {0} is not apart of any team.", username);
 
                 Score header = objective.getScore(ChatColor.BOLD + "== Your Rank ==");
                 header.setScore(10);
