@@ -2,7 +2,7 @@ package net.axolsystems.showtime;
 
 import java.io.File;
 
-import net.axolsystems.showtime.commands.HelpCommand;
+import net.axolsystems.showtime.commands.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -44,6 +44,8 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 import net.luckperms.api.query.QueryOptions;
 
+import javax.swing.text.View;
+
 public class ShowTime extends JavaPlugin implements Listener {
 
     public static final Logger logger = Logger.getLogger("ASCORE");
@@ -51,7 +53,7 @@ public class ShowTime extends JavaPlugin implements Listener {
     public static String version;
 
     private Map<String, TeamInfo> teamsMap = new HashMap<>();
-    private LuckPerms luckPerms;
+    private static LuckPerms luckPerms;
     private Set<Location> launcherBlocks;
     private File launcherFile;
     private FileConfiguration launcherConfig;
@@ -86,6 +88,10 @@ public class ShowTime extends JavaPlugin implements Listener {
         ShowTimeUpdate.getInstance().autoUpdate();
 
         this.getCommand("help").setExecutor(new HelpCommand(this));
+        this.getCommand("addpoints").setExecutor(new AddPointsCommand(this));
+        this.getCommand("removepoints").setExecutor(new RemovePointsCommand(this));
+        this.getCommand("viewteams").setExecutor(new ViewTeamsCommand(this));
+        this.getCommand("checkforupdates").setExecutor(new UpdateCheckingCommand(this));
 
         //loadLaunchers();
         initializeTeams();
@@ -166,7 +172,7 @@ public class ShowTime extends JavaPlugin implements Listener {
         return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', prefix);
     }
 
-    private String getPositionSuffix(int position) {
+    private static String getPositionSuffix(int position) {
         if (position == 1) {
             return "st";
         } else if (position == 2) {
@@ -178,7 +184,7 @@ public class ShowTime extends JavaPlugin implements Listener {
         }
     }
 
-    private ChatColor getChatColor(String colorCode) {
+    private static ChatColor getChatColor(String colorCode) {
         switch (colorCode.toLowerCase()) {
             case "&0": return ChatColor.BLACK;
             case "&1": return ChatColor.DARK_BLUE;
@@ -200,7 +206,7 @@ public class ShowTime extends JavaPlugin implements Listener {
         }
     }
 
-    public String getPlayerPrefix(Player player) {
+    public static String getPlayerPrefix(Player player) {
         UserManager userManager = luckPerms.getUserManager();
         User user = userManager.getUser(player.getUniqueId());
 
@@ -234,7 +240,7 @@ public class ShowTime extends JavaPlugin implements Listener {
         }
     }
 
-    private void updateScoreboard(String username) {
+    public static void updateScoreboard(String username) {
         
         JSONObject teamData = ShowTimeAPI.apiGetMethod("/api/teamdata");
         JSONObject settingsData = ShowTimeAPI.apiGetMethod("/api/getSettings");

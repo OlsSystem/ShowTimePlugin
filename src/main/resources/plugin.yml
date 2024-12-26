@@ -7,7 +7,19 @@ commands:
     description: Displays a list of all commands for Project Showtime
     usage: /help
     permission: showtime.contestant
-  addPoints:
-    description: Test command to see if help works as intended.
-    usage: /addPoints
+  addpoints:
+    description: Allows the addition of points when a team scores them.
+    usage: /addpoints <playername> <pointamount>
     permission: showtime.admin
+  removepoints:
+    description: Allows the removal of points if and when needed from a user.
+    usage: /removepoints <playername> <pointamount>
+    permission: showtime.admin
+  viewteams:
+    description: Allows this visualisation of all the teams currently playing.
+    usage: /viewteams
+    permission: showtime.contestant
+  checkforupdates:
+    description: Allows the automatic update of the showtime plugin via command input.
+    usage: /checkforupdates
+    permission: showtime.admin.updator
