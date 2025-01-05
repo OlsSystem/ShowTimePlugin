@@ -1,5 +1,6 @@
 package net.axolsystems.showtime.commands;
 
+import net.axolsystems.showtime.ShowTime;
 import net.axolsystems.showtime.ShowTimeAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,6 +24,8 @@ public class ViewTeamsCommand implements CommandExecutor {
         if (teamsObject != null) {
             StringBuilder teamsInfo = new StringBuilder("Teams:\n");
             JSONArray teamsArray = teamsObject.getJSONArray("teams");
+
+            ShowTime.logger.info("[DEBUG] Teams Array: " + teamsArray.toString());
 
             for (int i = 0; i < teamsArray.length(); i++) {
                 JSONObject team = teamsArray.getJSONObject(i);

@@ -23,3 +23,27 @@ commands:
     description: Allows the automatic update of the showtime plugin via command input.
     usage: /checkforupdates
     permission: showtime.admin.updator
+  updatedata:
+    description: Allows the user to automatically update the data of the tablist and scoreboard
+    usage: /updatedata
+    permission: showtime.admin
+  markslimelauncher:
+    description: Allows a user to mark a slime block as a launcher.
+    usage: /markslimelauncher
+    permission: showtime.admin
+  createcutscene:
+    description: Allows the user to create a cutscene.
+    usage: /createcutscene <name>
+    permission: showtime.admin
+  addcamera:
+    description: Allows the user to add a camera to a cutscene.
+    usage: /addcamera <cutscene_name> <duration_in_seconds>
+    permission: showtime.admin
+  playcutscene:
+    description: Allows the user to play the cutscene of their choice.
+    usage: /playcutscene <player> <cutscene_name>
+    permission: showtime.admin
+  playcutsceneall:
+    description: Allows the user to play a cutscene on all players.
+    usage: /playcutsceneall <cutscene_name>
+    permission: showtime.admin

@@ -39,7 +39,7 @@ public class AddPointsCommand implements CommandExecutor {
         ShowTime.logger.info(String.valueOf(success));
         if (success) {
             sender.sendMessage(pointsToAdd + " points added to " + playerName + "!");
-            //updateTabList();
+            ShowTime.updateTabList();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 ShowTime.updateScoreboard(player.getName());
             }

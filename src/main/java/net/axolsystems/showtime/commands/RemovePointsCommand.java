@@ -38,7 +38,7 @@ public class RemovePointsCommand implements CommandExecutor {
         boolean success = ShowTimeAPI.apiPostMethod("/api/pointsystem", payload);
         if (success) {
             sender.sendMessage(pointsToAdd + " points deducated from " + playerName + "!");
-            //updateTabList();
+            ShowTime.updateTabList();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 ShowTime.updateScoreboard(player.getName());
             }

@@ -2,7 +2,10 @@ package net.axolsystems.showtime;
 
 import java.io.File;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import net.axolsystems.showtime.commands.*;
+import net.axolsystems.showtime.commands.cutscenes.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -21,6 +24,7 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +40,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Team;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.luckperms.api.LuckPerms;
@@ -54,9 +59,11 @@ public class ShowTime extends JavaPlugin implements Listener {
 
     private Map<String, TeamInfo> teamsMap = new HashMap<>();
     private static LuckPerms luckPerms;
-    private Set<Location> launcherBlocks;
+    public static Set<Location> launcherBlocks;
     private File launcherFile;
     private FileConfiguration launcherConfig;
+    private static CutsceneManager cutsceneManager;
+    private static ProtocolManager protocolManager;
 
     private final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
@@ -87,13 +94,23 @@ public class ShowTime extends JavaPlugin implements Listener {
 
         ShowTimeUpdate.getInstance().autoUpdate();
 
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        cutsceneManager = new CutsceneManager(this);
+
         this.getCommand("help").setExecutor(new HelpCommand(this));
         this.getCommand("addpoints").setExecutor(new AddPointsCommand(this));
         this.getCommand("removepoints").setExecutor(new RemovePointsCommand(this));
         this.getCommand("viewteams").setExecutor(new ViewTeamsCommand(this));
         this.getCommand("checkforupdates").setExecutor(new UpdateCheckingCommand(this));
+        this.getCommand("updatedata").setExecutor(new UpdateDataCommand(this));
+        this.getCommand("markslimelauncher").setExecutor(new AddLauncherCommand(this));
 
-        //loadLaunchers();
+        this.getCommand("createcutscene").setExecutor(new CreateCutsceneCommand(this, cutsceneManager));
+        this.getCommand("addcamera").setExecutor(new AddCameraCommand(this, cutsceneManager));
+        this.getCommand("playcutscene").setExecutor(new PlayCutsceneCommand(this, cutsceneManager));
+        this.getCommand("playcutsceneall").setExecutor(new PlayCutsceneAllCommand(this, cutsceneManager));
+
+        loadLauncher();
         initializeTeams();
         updateTabList();
 
@@ -106,8 +123,16 @@ public class ShowTime extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        //saveLaunchers();
+        saveLaunchers();
         logger.log(Level.WARNING, "ShowTime v{0} is disabling.", version);
+    }
+
+    public static CutsceneManager getCutsceneManager() {
+        return cutsceneManager;
+    }
+
+    public static ProtocolManager getProtocolManager() {
+        return protocolManager;
     }
 
     @EventHandler
@@ -129,7 +154,7 @@ public class ShowTime extends JavaPlugin implements Listener {
         updateScoreboard(player.getName());
         updateTabList();
 
-        logger.log(Level.INFO, "[DEBUG]{0} Has Left the server.", event.getPlayer().getDisplayName());
+        logger.log(Level.INFO, "[DEBUG] {0} Has Left the server.", event.getPlayer().getDisplayName());
     }
 
     @EventHandler
@@ -232,11 +257,11 @@ public class ShowTime extends JavaPlugin implements Listener {
         }
     }
 
-    public void updateTabList() {
+    public static void updateTabList() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            //String header = ChatColor.GREEN.toString() + ChatColor.BOLD + "PROJECT SHOWTIME\n" + ChatColor.YELLOW + "Presented By " + ChatColor.DARK_AQUA + "OlsSystem" + ChatColor.YELLOW + "&" + ChatColor.AQUA + "SkwSliice\n" + ChatColor.RED + "---------------------------\n" + ChatColor.WHITE + "EVENT STATISTICS:" + "\n\n" + getTeamData();
+            String header = ChatColor.GREEN.toString() + ChatColor.BOLD + "PROJECT SHOWTIME\n" + ChatColor.YELLOW + "Presented By " + ChatColor.DARK_AQUA + "OlsSystem" + ChatColor.YELLOW + " & " + ChatColor.AQUA + "SkwSliice\n" + ChatColor.RED + "---------------------------\n" + ChatColor.WHITE + "EVENT STATISTICS:" + "\n\n" + getTabListData();
 
-            //player.setPlayerListHeader(header);
+            player.setPlayerListHeader(header);
         }
     }
 
@@ -403,6 +428,104 @@ public class ShowTime extends JavaPlugin implements Listener {
             playersEntry.setScore(-2);
 
             player.setScoreboard(playerScoreboard);
+        }
+    }
+
+    private static String getTabListData() {
+
+        StringBuilder footer = new StringBuilder();
+
+        try {
+
+            JSONObject teamsObject = ShowTimeAPI.apiGetMethod("/api/teamdata");
+            JSONArray teamsArray = teamsObject.getJSONArray("teams");
+            List<TeamInfo> teamInfoList = new ArrayList<>();
+
+            for (int i = 0; i < teamsArray.length(); i++) {
+                JSONObject team = teamsArray.getJSONObject(i);
+                String teamName = team.getString("teamName");
+                String teamColour = team.getString("color");
+                String lpGroupName = team.getString("lpGroup");
+                int points = team.getInt("points");
+                JSONArray contestantArray = team.getJSONArray("players");
+
+                List<String> contestantsList = new ArrayList<>();
+
+                for (int j = 0; j < contestantArray.length(); j++) {
+                    contestantsList.add(contestantArray.getString(j));
+                }
+
+                teamInfoList.add(new TeamInfo(teamName, points, contestantsList, teamColour, lpGroupName));
+            }
+
+            Collections.sort(teamInfoList, Comparator.comparingInt(TeamInfo::getPoints).reversed());
+
+            int maxTeamNameLength = teamInfoList.stream().mapToInt(teamInfo -> teamInfo.getTeamName().length()).max().orElse(0);
+            int teamNameWidth = maxTeamNameLength + 5;
+            int pointsWidth = 10;
+
+            for (int i = 0; i < teamInfoList.size(); i++) {
+                JSONObject team = teamsArray.getJSONObject(i);
+                TeamInfo teamInfo = teamInfoList.get(i);
+                String teamName = teamInfo.getTeamName();
+                String colour = teamInfo.getTeamColour();
+                int points = teamInfo.getPoints();
+                List<String> contestantsList = teamInfo.getPlayers();
+
+                String teamNameWithColour = colour + "&l" + teamName;
+
+                footer.append(ChatColor.WHITE).append(String.format("%d %-" + teamNameWidth + "s", i + 1, ChatColor.translateAlternateColorCodes('&', teamNameWithColour)))
+                        .append(ChatColor.GOLD).append(String.format("[%d]", points)).append("\n");
+
+                for (String playerName : contestantsList) {
+                    Player player = Bukkit.getPlayer(playerName);
+
+                    if (player != null && player.isOnline()) {
+                        footer.append(ChatColor.GREEN);
+                    } else {
+                        footer.append(ChatColor.RED);
+                    }
+
+                    footer.append(playerName).append(", ");
+                }
+                if (!contestantsList.isEmpty()) {
+                    footer.delete(footer.length() - 2, footer.length());
+                }
+
+                footer.append("\n");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            footer.append(ChatColor.RED).append("Error retrieving team data");
+        }
+
+        return footer.toString();
+    }
+
+    public void loadLauncher() {
+        if (launcherConfig.contains("launcher")) {
+            for (String key : launcherConfig.getConfigurationSection("launcher").getKeys(false)) {
+                Location location = launcherConfig.getLocation("launchers." + key);
+                if (location != null) {
+                    launcherBlocks.add(location);
+                    logger.info("Added block to the launcher block config.");
+                }
+            }
+        }
+    }
+
+    public void saveLaunchers() {
+        int i = 0;
+        for (Location location : launcherBlocks) {
+            launcherConfig.set("launchers." + i, location);
+            i++;
+        }
+
+        try {
+            launcherConfig.save(launcherFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
